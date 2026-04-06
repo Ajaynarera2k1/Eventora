@@ -64,8 +64,10 @@ export const login = async (req, res) => {
             role: user.role,
             token: generateToken(user.id, user.role)
         });
+        // console.log(`User ${user.email} logged in successfully`)
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });
+        // console.log(`Login error for email ${req.body.email}: ${error.message}`)
     }
 };
 
