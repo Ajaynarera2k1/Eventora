@@ -5,15 +5,17 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-app.get('/', (req, res) => {
-  res.send('Eventora backend is running');
-});
+
 
 import authRoutes from './routes/auth.js';
 import eventRoutes from './routes/events.js';
 import bookingRoutes from './routes/bookings.js';
 
 const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Eventora backend is running');
+});
 
 // Middleware
 app.use(
