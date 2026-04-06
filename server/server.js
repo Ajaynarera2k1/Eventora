@@ -20,7 +20,23 @@ app.get('/', (req, res) => {
 // Middleware
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.CLIENT_URL,
+        'http://localhost:5173'
+      ].filter(Boolean);
+
+      const isVercelPreview =
+        typeof origin === 'string' &&
+        origin.endsWith('.vercel.app');
+
+      // Allow server-to-server/no-origin requests and approved browser origins.
+      if (!origin || allowedOrigins.includes(origin) || isVercelPreview) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true
   })
 );
