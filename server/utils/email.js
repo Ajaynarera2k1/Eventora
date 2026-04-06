@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        pass: (process.env.EMAIL_PASS || '').replace(/\s+/g, '')
     }
 });
 
@@ -30,6 +30,7 @@ const sendBookingEmail = async (userEmail, userName, eventTitle) => {
         // console.log('Email sent successfully to', userEmail);
     } catch (error) {
         console.error('Error sending email:', error);
+        throw new Error(`Booking email send failed: ${error.message}`);
     }
 };
 
@@ -59,6 +60,7 @@ const sendOTPEmail = async (userEmail, otp, type) => {
         console.log(`OTP sent to ${userEmail} for ${type}`);
     } catch (error) {
         console.error('Error sending OTP email:', error);
+        throw new Error(`OTP email send failed: ${error.message}`);
     }
 };
 
