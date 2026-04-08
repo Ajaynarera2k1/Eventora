@@ -1,198 +1,233 @@
-Eventora 🎟️
+Eventora — Interview Guide 🎯
 
-A full-stack MERN event booking platform with role-based access, 2FA OTP verification, and a real-time admin dashboard.
+📌 Project Introduction (Say This First)
 
-Eventora lets users browse and book events seamlessly while giving administrators full control over event creation, booking approvals, and payment tracking — all in one platform.
-🔗 Live Demo · 📂 GitHub Repository · 📬 Postman Collection
-
-✨ Why Eventora?
-Eventora is not just a CRUD booking app. It is a complete product with real-world flows:
-
-🔐 JWT authentication with bcrypt — no shortcuts on security
-📧 Two-factor OTP verification for both registration and booking
-👥 Strict role-based access — admins and users see completely different experiences
-🪑 Smart seat management — overbooking is blocked at the database level
-📊 Live admin analytics — pending requests, revenue, and confirmed bookings in real time
-💌 Automated email notifications on booking confirmation via Nodemailer
+"I built Eventora — a full-stack MERN event booking platform with role-based access control, two-factor OTP verification, and a real-time admin dashboard. It's not just a basic CRUD app — it has real-world flows like OTP-based booking confirmation, smart seat management to prevent overbooking, and a complete admin workflow for reviewing and approving bookings."
 
 
-🚀 Features
-Authentication & Security
+🧠 Project Overview to Explain
+What does Eventora do?
 
-Secure signup and login with JWT and bcrypt
-Mandatory email OTP to activate account on registration
-Mandatory email OTP to confirm every ticket booking — prevents unauthorized bookings
-OTP re-triggered on delayed or suspicious login attempts
+Users can browse events and book tickets with OTP verification
+Every booking enters a pending queue — admin reviews and approves/rejects
+Admin can create, edit, delete events and manage all bookings
+2FA OTP on both registration AND booking — double security layer
+Real-time analytics dashboard for admin — revenue, pending requests, confirmed clients
+Automated email notifications on booking confirmation
+Seat management — overbooking blocked at database level
 
-Role-Based Access
-FeatureUserAdminBrowse events✅✅Book tickets (with OTP)✅❌View personal booking dashboard✅❌Cancel own bookings✅❌Create / Edit / Delete events❌✅Confirm or reject booking requests❌✅Mark bookings as Paid / Not Paid❌✅View analytics dashboard❌✅
+Why did you build it?
 
-Admin access is strictly locked to database-flagged users — no frontend bypass possible.
-
-Event Management
-
-Create free and paid events with full details — description, image URL, date, category, and seating capacity
-Edit and delete events from the admin dashboard
-Seat availability updates in real time and validates against overbooking
-
-Smart Booking System
-
-Every booking (free or paid) enters a secure Pending queue
-Admin manually reviews, confirms, or rejects each request
-Payments are tracked and marked directly by the admin
-Booking confirmation triggers an automated email to the user
-
-Admin Analytics Dashboard
-
-Live count of pending booking requests
-Total revenue from confirmed paid bookings
-Total confirmed paid clients
-
-UI/UX
-
-Built with React and Tailwind CSS
-Micro-interactions throughout for a polished feel
-Fully responsive across devices
+"I wanted to build something beyond a basic CRUD app. Eventora gave me experience with role-based access control, OTP-based 2FA, admin workflows, and real-world booking flows — things you actually encounter in production applications."
 
 
-🛠️ Tech Stack
-LayerTechnologyFrontendReact, Vite, Tailwind CSSBackendNode.js, ExpressDatabaseMongoDB + MongooseAuthJWT + BcryptEmail / OTPNodemailer (Gmail App Password)Frontend DeployVercelBackend DeployRender
+🛠️ Tech Stack Explanation
+Frontend
 
-📁 Project Structure
-Eventora/
-├── client/                  # React frontend (Vite)
-│   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   ├── pages/           # Route-level page components
-│   │   ├── context/         # Auth context and global state
-│   │   └── utils/           # API helpers and constants
-│   └── vite.config.js
-│
-├── server/                  # Express backend
-│   ├── controllers/         # Route handler logic
-│   ├── middleware/           # Auth and role-check middleware
-│   ├── models/              # Mongoose schemas
-│   ├── routes/              # API route definitions
-│   └── index.js             # Server entry point
-│
-├── Eventora_Postman_Collection.json   # Ready-to-import API collection
-├── SETUP_GUIDE.md           # Detailed setup instructions
-├── dfd.png                  # Data flow diagram
-├── fc.png                   # Flowchart diagram
-└── package.json             # Root scripts for running both client and server
+React + Vite — Component-based UI with fast development server
+Tailwind CSS — Utility-first CSS for responsive design
+Context API — Global auth state management
+Axios — HTTP requests to backend API
+Vercel — Frontend deployment with SPA routing support
 
-⚙️ How It Works
-User registers → Email OTP sent → Account activated
-        ↓
-User browses events → Selects event → OTP verification → Booking submitted
-        ↓
-Booking enters Pending queue → Admin reviews
-        ↓
-Admin confirms → Booking marked Paid → Confirmation email sent to user
-        ↓
-Admin dashboard updates — revenue and client count reflect in real time
+Backend
 
-🧑‍💻 Local Setup
-Prerequisites
+Node.js + Express.js — REST API server
+ES Modules — Modern import/export syntax
+JWT — Stateless authentication
+Bcrypt — Password hashing
+Nodemailer + Gmail — OTP and notification emails
+Render — Backend deployment
 
-Node.js installed
-MongoDB Atlas account (free tier works)
-Gmail account with App Password enabled
+Database
 
-1. Clone the repository
-bashgit clone https://github.com/Ajaynarera2k1/Eventora.git
-cd Eventora
-2. Configure environment variables
-Create a .env file inside the server/ folder:
-envMONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_long_random_jwt_secret
-EMAIL_USER=your_gmail_address
-EMAIL_PASS=your_gmail_app_password
-PORT=5000
-
-Note on EMAIL_PASS: Use a Gmail App Password, not your regular password. Generate one from Google Account → Security → 2-Step Verification → App Passwords.
-
-3. Run from root (recommended — single terminal)
-bashnpm install
-npm run install:all   # installs dependencies for both client and server
-npm run dev           # starts both frontend and backend together
-4. Run separately (two terminals)
-Backend:
-bashcd server
-npm install --legacy-peer-deps
-npm run dev
-# Runs on http://localhost:5000
-Frontend:
-bashcd client
-npm install
-npm run dev
-# Runs on http://localhost:5173
-
-📜 Available Scripts (Root)
-ScriptDescriptionnpm run devStarts both server and client using concurrentlynpm run install:allInstalls dependencies for server and clientnpm run dev:allInstalls all dependencies then starts both serversnpm run startRuns backend start + frontend preview
-
-🔌 API Overview
-All protected routes require a valid JWT token in the Authorization header.
-Auth Routes
-POST   /api/auth/register          # Register new user
-POST   /api/auth/verify-otp        # Verify registration OTP
-POST   /api/auth/login             # Login and receive JWT
-POST   /api/auth/resend-otp        # Resend OTP
-Event Routes
-GET    /api/events                 # Get all events (public)
-GET    /api/events/:id             # Get single event (public)
-POST   /api/events                 # Create event (admin only)
-PUT    /api/events/:id             # Update event (admin only)
-DELETE /api/events/:id             # Delete event (admin only)
-Booking Routes
-POST   /api/bookings               # Submit booking request (user)
-POST   /api/bookings/verify-otp    # Confirm booking with OTP (user)
-GET    /api/bookings/my            # Get user's own bookings (user)
-DELETE /api/bookings/:id           # Cancel booking (user)
-GET    /api/bookings               # Get all bookings (admin)
-PATCH  /api/bookings/:id/confirm   # Confirm booking (admin)
-PATCH  /api/bookings/:id/reject    # Reject booking (admin)
-PATCH  /api/bookings/:id/payment   # Mark as paid/unpaid (admin)
-Dashboard Routes
-GET    /api/dashboard/admin        # Admin analytics (admin only)
-
-📬 Full API documentation available in the included Postman Collection — import Eventora_Postman_Collection.json directly into Postman.
+MongoDB Atlas — Cloud NoSQL database
+Mongoose — Schema definition, validation, and queries
 
 
-🌐 Deployment
-Frontend → Vercel
+🔑 Key Technical Concepts to Explain
+1. Registration Flow
+User fills signup form →
+Backend generates OTP → OTP emailed to user →
+User enters OTP → Account activated →
+JWT token issued → User logged in
+2. Booking Flow with 2FA
+User selects event → Clicks Book →
+Backend checks seat availability →
+OTP generated and emailed →
+User enters OTP → Booking submitted →
+Booking enters Pending queue →
+Admin reviews → Confirms or Rejects →
+Confirmation email sent to user
+3. Role-Based Access Control
+Every protected route has Auth middleware (verifies JWT) +
+Role middleware (checks req.user.role === 'admin') →
+If user tries admin route → 403 Forbidden
+Admin flag is set only at database level — no frontend bypass
+4. Seat Management
+When booking submitted →
+MongoDB checks current confirmed bookings count →
+Compared against event.capacity →
+If full → booking rejected immediately →
+Prevents race conditions / overbooking
+5. Admin Analytics
+MongoDB aggregation pipelines →
+Count pending bookings →
+Sum revenue from confirmed + paid bookings →
+Count confirmed paid clients →
+All returned in single dashboard API call
 
-Connect your GitHub repo to Vercel
-Set the root directory to client/
-Add environment variable: VITE_API_URL=your-render-backend-url
-Add vercel.json with SPA rewrite rules for React Router
+❓ Expected Interview Questions & Answers
 
-Backend → Render
+🔐 Authentication & Security
+Q: What is 2FA and how did you implement it?
 
-Create a new Render Web Service
-Set root directory to server/
-Add all environment variables from your .env
-Deploy — Render auto-detects Node.js
+"Two-Factor Authentication adds a second verification step beyond password. In Eventora I implemented it using email OTP. During registration, after filling the form, an OTP is generated on the backend, stored temporarily, and emailed to the user. The account is only activated after OTP verification. The same flow is repeated for every booking — this prevents someone from booking tickets even if they somehow have access to another person's account."
 
+Q: How do you store and validate OTPs?
 
-🗺️ Roadmap
+"OTPs are generated using Math.random(), stored in the user or booking document in MongoDB with a timestamp, and verified by comparing the submitted OTP with the stored one. I also check expiry — OTPs expire after a set time to prevent replay attacks."
 
- Razorpay / payment gateway integration for online payments
- Real-time seat availability with WebSockets
- QR code ticket generation on booking confirmation
- Event search and filter by category, date, and price
- Automated test suite with Jest and React Testing Library
- Admin event analytics with charts and export
+Q: How does role-based access control work?
 
+"When a user registers, their role is stored in MongoDB as either user or admin. Admin accounts are only created directly in the database — there's no public API to become an admin. Every protected route passes through two middlewares: first the Auth middleware verifies the JWT token, then a Role middleware checks if req.user.role === 'admin'. If not, a 403 Forbidden response is returned."
 
-⚠️ Current Limitations
+Q: Can a user manipulate their role from the frontend?
 
-Payments are tracked manually by admin — no automated payment gateway yet
-No pagination on event listings for large datasets
-No formal automated test suite
+"No. The role is stored in the database and embedded in the JWT token at login time. The JWT is signed with a secret key — if someone tampers with the token payload, the signature verification fails. Even if someone modifies localStorage, the backend always re-verifies the token on every request."
+
+Q: Why did you use JWT instead of sessions?
+
+"JWT is stateless — the server doesn't store any session data. The token itself contains the user's ID and role, signed with a secret. This makes the backend scalable since any server instance can verify the token without a shared session store. It also works well with React SPAs where the token is stored in localStorage."
+
+Q: How does bcrypt work?
+
+"Bcrypt is a one-way hashing algorithm designed specifically for passwords. It adds a random salt before hashing, which means the same password produces a different hash every time — preventing rainbow table attacks. During login, bcrypt.compare() hashes the input and compares it with the stored hash. The original password is never stored or retrievable."
 
 
-👨‍💻 Author
-Ajay Narera
-Full Stack Developer — MERN Stack
-📧 nareraajay1@gmail.com · 📍 Rajasthan, India · 🔗 GitHub
+📅 Booking System
+Q: Why does every booking go through a pending queue?
+
+"In real event management, organizers need control over who attends. A pending queue lets admins verify bookings, manage capacity manually, handle special requests, and prevent spam bookings. It mirrors how real ticketing platforms like BookMyShow work for certain event types."
+
+Q: How do you prevent overbooking?
+
+"When a booking is submitted, the backend queries MongoDB to count all confirmed bookings for that event and compares it against event.capacity. If the count has reached capacity, the booking is rejected immediately with an error. This check happens at the database level — not just the frontend — so it cannot be bypassed."
+
+Q: What happens if two users book the last seat simultaneously?
+
+"This is a race condition. Currently I handle it with a database-level check on every booking request. A more robust solution would be MongoDB transactions or optimistic locking — which I've listed in the roadmap. For the current scale it works reliably."
+
+Q: Why do you require OTP for every booking and not just registration?
+
+"To prevent unauthorized bookings. If someone's account is compromised or if they share their login, OTP ensures only the actual email owner can confirm a booking. It's an extra layer of protection, especially important for paid events."
+
+
+👥 Role-Based Access
+Q: How is the admin dashboard different from the user dashboard?
+
+"Users see their personal bookings, event listings, and can cancel their own bookings. Admins see a completely different interface — all bookings across all users, pending requests to approve or reject, payment status management, event CRUD controls, and an analytics panel showing revenue, pending count, and confirmed clients. The routing and API endpoints are completely separate."
+
+Q: What if someone tries to access an admin API endpoint directly?
+
+"Every admin route is protected by two middlewares — the Auth middleware verifies the JWT token, and the Role middleware checks req.user.role === 'admin'. If either check fails, the request is rejected with a 401 or 403 error before reaching the controller. There is no way to bypass this from the frontend."
+
+
+📧 Email & OTP
+Q: How did you implement email sending?
+
+"I used Nodemailer with Gmail as the SMTP service. Gmail requires an App Password — a 16-character password generated from Google Account security settings — instead of the actual Gmail password. The transporter is configured with the Gmail service, email, and app password from environment variables. I send HTML emails for OTPs and booking confirmations."
+
+Q: What if the OTP email fails to send?
+
+"Currently the API returns an error if email sending fails. A production improvement would be to use a message queue like Bull to retry failed emails automatically, and use a dedicated email service like SendGrid instead of Gmail for better deliverability and reliability."
+
+Q: How long are OTPs valid?
+
+"OTPs have a time-based expiry stored alongside them in the database. If the user submits an OTP after expiry, the backend rejects it and they need to request a new one. This prevents OTP reuse attacks."
+
+
+🗄️ Database
+Q: How did you design the data models?
+
+"I have three main models:
+
+User — stores name, email, hashed password, role, OTP, verified status
+Event — stores title, description, date, category, capacity, price, image URL
+Booking — stores references to user and event, status (pending/confirmed/rejected), payment status, OTP for booking verification"
+
+
+Q: How does the admin analytics work?
+
+"I use MongoDB aggregation pipelines. For revenue, I use $match to filter confirmed and paid bookings, then $lookup to join with the events collection, then $group to sum the ticket prices. For pending count, a simple countDocuments with a pending status filter. All three metrics are fetched in a single dashboard API call."
+
+Q: Why MongoDB over SQL for this project?
+
+"Event data is flexible — different events can have different attributes. MongoDB's document model handles this naturally without schema migrations. Also, the project is JavaScript throughout — MongoDB's JSON-like documents integrate seamlessly with Node.js and React."
+
+
+⚛️ Frontend
+Q: Why React with Vite instead of Create React App?
+
+"Vite is significantly faster than CRA for both development startup and hot module replacement. It uses native ES modules in development and Rollup for production builds. For a modern React project, Vite is the better choice."
+
+Q: How did you manage global auth state?
+
+"I used React's Context API with a custom AuthContext. After login, the JWT token is stored in localStorage and the decoded user object is stored in context. Every component that needs auth state consumes the context. On page refresh, the context re-reads from localStorage to restore the session."
+
+Q: Why Tailwind CSS?
+
+"Tailwind's utility-first approach lets me style components directly in JSX without switching between files. It's highly consistent, produces smaller CSS bundles in production via purging, and the responsive utilities make mobile-first design straightforward."
+
+
+🚀 Deployment
+Q: How is the project deployed?
+
+"It's a monorepo with separate client and server folders. The React frontend is deployed on Vercel — it auto-detects Vite and builds the project. The Express backend is deployed on Render as a Node.js web service. The frontend communicates with the backend via the VITE_API_URL environment variable pointing to the Render URL."
+
+Q: How do you handle React Router on Vercel?
+
+"React Router handles routing on the client side — but when you refresh a page like /events/123, Vercel tries to find a server file at that path and returns a 404. I added a vercel.json file with a rewrite rule that redirects all routes to index.html, letting React Router handle the routing."
+
+Q: What environment variables does the project use?
+
+"Backend: MONGO_URI, JWT_SECRET, EMAIL_USER, EMAIL_PASS, PORT. Frontend: VITE_API_URL pointing to the Render backend URL. All are stored in .env files locally and configured in Vercel/Render dashboards for production."
+
+
+🌐 General
+Q: What is CORS and why do you need it?
+
+"CORS is a browser security policy that blocks requests from one origin to another. Since my frontend on Vercel (eventora.vercel.app) makes requests to my backend on Render (eventora.onrender.com), they are different origins. I configured the CORS middleware on Express to allow requests from the Vercel domain."
+
+Q: What would you improve if you had more time?
+
+"Several things from the roadmap:
+
+Integrate Razorpay for actual online payments instead of manual tracking
+Add WebSockets for real-time seat availability updates
+Generate QR code tickets on booking confirmation
+Add search and filter for events by category, date, price
+Write automated tests with Jest and React Testing Library
+Add pagination for large event listings"
+
+
+Q: How is Eventora different from ShareKit?
+
+"They solve different problems. ShareKit is a file storage and sharing platform — focused on file handling, cloud storage, and payment-based storage upgrades. Eventora is an event booking platform — focused on role-based access, 2FA security, booking workflows, and admin management. Together they show my ability to build different types of full-stack applications."
+
+
+🎯 Tips for the Interview
+
+Emphasize the 2FA flow — it's the most unique feature and shows security awareness
+Highlight role-based access — explain it's enforced at the database AND API level
+Mention the pending queue — it shows you thought about real-world admin workflows
+Be ready to draw the booking flow — interviewers love flowcharts
+Know the difference between your two projects — ShareKit vs Eventora shows range
+
+
+🔗 Quick Reference
+
+Live URL: https://eventora.vercel.app (frontend)
+GitHub: https://github.com/Ajaynarera2k1/Eventora
+Stack: React, Vite, Tailwind, Node.js, Express, MongoDB, JWT, Nodemailer
+Key Features: 2FA OTP, Role-based access, Booking queue, Admin analytics
